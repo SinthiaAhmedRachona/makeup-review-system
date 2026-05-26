@@ -30,7 +30,7 @@ python main.py
 ## 📁 Project Structure
 
 ```
-/
+makeup-review-system/
 ├── ...
 ```
 
