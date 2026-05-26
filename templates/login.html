@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Makeup Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #E8D5F5 0%, #D8F0E8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        /* Floating hearts animation */
+        @keyframes floatLove {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .floating-love {
+            position: fixed;
+            font-size: 25px;
+            pointer-events: none;
+            animation: floatLove 12s linear infinite;
+            z-index: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 35px;
+            padding: 45px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(155, 123, 181, 0.25);
+            backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 1;
+        }
+        .logo { text-align: center; font-size: 55px; margin-bottom: 15px; }
+        h2 { text-align: center; color: #6B4B8B; margin-bottom: 8px; }
+        .subtitle { text-align: center; color: #9B7BB5; margin-bottom: 35px; font-size: 0.9em; }
+        .form-group { margin-bottom: 22px; }
+        label { display: block; margin-bottom: 8px; color: #7B5B9B; font-weight: 600; }
+        .input-icon {
+            position: relative;
+        }
+        .input-icon span {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1em;
+        }
+        input {
+            width: 100%;
+            padding: 14px 14px 14px 42px;
+            border: 2px solid #E8D5F5;
+            border-radius: 25px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #9B7BB5;
+            box-shadow: 0 0 0 4px rgba(155, 123, 181, 0.15);
+        }
+        .role-selector {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+        .role-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            border: 2px solid #E8D5F5;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        .role-option.active {
+            border-color: #9B7BB5;
+            background: #F5EDFF;
+            box-shadow: 0 2px 8px rgba(155, 123, 181, 0.2);
+        }
+        .role-option span {
+            font-size: 1.2em;
+        }
+        .role-option label {
+            margin: 0;
+            cursor: pointer;
+            color: #9B7BB5;
+            font-weight: 500;
+        }
+        .role-option.active label {
+            color: #6B4B8B;
+            font-weight: 600;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #9B7BB5 0%, #7B5B9B 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(155, 123, 181, 0.4);
+        }
+        .flash-messages { margin-bottom: 20px; }
+        .flash {
+            padding: 12px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .flash.success {
+            background: #D8F0E8;
+            color: #4A8B7A;
+            border-left: 4px solid #4A8B7A;
+        }
+        .flash.error {
+            background: #FFE4E4;
+            color: #D46B6B;
+            border-left: 4px solid #D46B6B;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #9B7BB5;
+        }
+        .register-link a {
+            color: #7B5B9B;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .register-link a:hover { text-decoration: underline; }
+        .forgot-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .forgot-link a {
+            color: #D46B6B;
+            text-decoration: none;
+            font-size: 0.85em;
+        }
+        .forgot-link a:hover { text-decoration: underline; }
+        .cute-decoration {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #E8D5F5;
+            font-size: 1.2em;
+            color: #9B7BB5;
+        }
+        @media (max-width: 500px) {
+            .container { padding: 30px; }
+            .role-selector { flex-direction: column; }
+        }
+    </style>
+    <script>
+        function selectRole(role) {
+            document.getElementById('role_input').value = role;
+            document.querySelectorAll('.role-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            if (role === 'user') {
+                document.getElementById('role-user').classList.add('active');
+            } else {
+                document.getElementById('role-admin').classList.add('active');
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="floating-love" style="left: 5%; animation-duration: 11s;">💜</div>
+    <div class="floating-love" style="left: 20%; animation-duration: 14s; animation-delay: 2s;">💚</div>
+    <div class="floating-love" style="left: 35%; animation-duration: 9s; animation-delay: 4s;">💖</div>
+    <div class="floating-love" style="left: 50%; animation-duration: 12s; animation-delay: 1s;">💜</div>
+    <div class="floating-love" style="left: 65%; animation-duration: 10s; animation-delay: 3s;">💚</div>
+    <div class="floating-love" style="left: 80%; animation-duration: 13s; animation-delay: 5s;">💖</div>
+    <div class="floating-love" style="left: 95%; animation-duration: 8s; animation-delay: 2.5s;">💜</div>
+
+    <div class="container">
+        <div class="logo">💜🔐💚</div>
+        <h2>Welcome Back!</h2>
+        <p class="subtitle">Sign in to share your beauty reviews 💖</p>
+        
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        <span>{% if category == 'success' %}✅{% else %}⚠️{% endif %}</span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+        </div>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label>👤 Username</label>
+                <div class="input-icon">
+                    <span>💜</span>
+                    <input type="text" name="username" placeholder="Enter your username" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>🔒 Password</label>
+                <div class="input-icon">
+                    <span>🔑</span>
+                    <input type="password" name="password" placeholder="Enter your password" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>👑 Login As</label>
+                <div class="role-selector">
+                    <div class="role-option active" id="role-user" onclick="selectRole('user')">
+                        <span>👤</span>
+                        <label>Regular User</label>
+                    </div>
+                    <div class="role-option" id="role-admin" onclick="selectRole('admin')">
+                        <span>👑</span>
+                        <label>Administrator</label>
+                    </div>
+                </div>
+                <input type="hidden" name="role" id="role_input" value="user">
+            </div>
+            
+            <button type="submit">
+                <span>💖</span> Login <span>🚀</span>
+            </button>
+        </form>
+        
+        <div class="forgot-link">
+            <a href="/forgot_password">💜 Forgot Password? 💜</a>
+        </div>
+        
+        <div class="register-link">
+            💕 New here? <a href="/register">Create an account</a> 💕
+        </div>
+        
+        <div class="cute-decoration">
+            <span>💄</span> <span>💅</span> <span>💋</span> <span>🌸</span> <span>💖</span> <span>✨</span> <span>🪞</span>
+        </div>
+    </div>
+
+    <script>
+        // Add floating hearts dynamically
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'floating-love';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            heart.style.animationDelay = '0s';
+            heart.innerHTML = ['💜', '💚', '💖', '💗', '💕', '💝'][Math.floor(Math.random() * 6)];
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }, 2000);
+    </script>
+</body>
+</html>

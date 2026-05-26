@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #E8F4FD 0%, #D6EEFB 50%, #C5E8FA 100%);
+            min-height: 100vh;
+        }
+        /* Floating bubbles animation */
+        @keyframes floatBubble {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0.6; }
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+        }
+        .floating-bubble {
+            position: fixed;
+            font-size: 30px;
+            pointer-events: none;
+            animation: floatBubble 12s linear infinite;
+            z-index: 0;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #4A90D9 0%, #357ABD 50%, #2C6AA0 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(74, 144, 217, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        .logo { 
+            font-size: 1.5em; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 18px;
+            border-radius: 25px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover { 
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; position: relative; z-index: 1; }
+        .welcome-card {
+            background: linear-gradient(135deg, #FFFFFF, #F0F9FF);
+            padding: 35px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            border-left: 6px solid #4A90D9;
+            box-shadow: 0 8px 25px rgba(74, 144, 217, 0.15);
+            transition: transform 0.3s;
+        }
+        .welcome-card:hover {
+            transform: translateY(-3px);
+        }
+        .welcome-card h2 { color: #2C6AA0; font-size: 1.8em; }
+        .welcome-card p { color: #6BA3D6; margin-top: 10px; }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            background: linear-gradient(135deg, #4A90D9 0%, #357ABD 100%);
+            color: white;
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 35px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(74, 144, 217, 0.3);
+        }
+        .action-btn:hover { 
+            background: linear-gradient(135deg, #357ABD 0%, #2C6AA0 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 144, 217, 0.4);
+        }
+        .reviews-section {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        .reviews-section:hover {
+            transform: translateY(-3px);
+        }
+        .reviews-section h3 { 
+            color: #2C6AA0; 
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .review-card {
+            border-bottom: 1px solid #E0F0FA;
+            padding: 20px;
+            transition: all 0.3s;
+            border-radius: 15px;
+        }
+        .review-card:hover { 
+            background: #F0F9FF; 
+            border-radius: 15px;
+            transform: translateX(5px);
+        }
+        .review-product { font-size: 1.2em; font-weight: bold; color: #2C6AA0; }
+        .review-user { color: #6BA3D6; font-size: 0.85em; margin: 5px 0; }
+        .review-rating { color: #FFC107; font-size: 1.1em; margin: 8px 0; }
+        .review-text { color: #4A6A85; margin: 10px 0; line-height: 1.5; }
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+        .helpful-count { color: #6BA3D6; }
+        .delete-link { 
+            color: #E88A7A; 
+            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+        .delete-link:hover {
+            background: #FFEBEE;
+            color: #D32F2F;
+        }
+        .flash { padding: 12px 20px; border-radius: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .flash.success { background: #E8F5E9; color: #4CAF50; border-left: 4px solid #4CAF50; }
+        .flash.error { background: #FFEBEE; color: #E57373; border-left: 4px solid #E57373; }
+        .admin-badge {
+            background: linear-gradient(135deg, #FFD54F 0%, #FFC107 100%);
+            color: #2C6AA0;
+            padding: 4px 12px;
+            border-radius: 25px;
+            font-size: 0.75em;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        .action-btn:nth-child(1) { animation: wave 2s ease-in-out infinite; }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 15px; text-align: center; }
+            .nav-links a { margin: 0 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating bubbles animation -->
+    <div class="floating-bubble" style="left: 5%; animation-duration: 11s;">💙</div>
+    <div class="floating-bubble" style="left: 15%; animation-duration: 14s; animation-delay: 2s;">💎</div>
+    <div class="floating-bubble" style="left: 25%; animation-duration: 9s; animation-delay: 4s;">✨</div>
+    <div class="floating-bubble" style="left: 40%; animation-duration: 12s; animation-delay: 1s;">⭐</div>
+    <div class="floating-bubble" style="left: 55%; animation-duration: 10s; animation-delay: 3s;">💙</div>
+    <div class="floating-bubble" style="left: 70%; animation-duration: 13s; animation-delay: 5s;">🌟</div>
+    <div class="floating-bubble" style="left: 85%; animation-duration: 8s; animation-delay: 2.5s;">✨</div>
+    <div class="floating-bubble" style="right: 10%; animation-duration: 15s; animation-delay: 4s;">💎</div>
+
+    <div class="navbar">
+        <div class="logo">
+            <span>💙</span> Smart Reviews
+        </div>
+        <div class="nav-links">
+            <a href="/dashboard">🏠 Dashboard</a>
+            <a href="/add_review">✍️ Add Review</a>
+            <a href="/view_reviews">📋 All Reviews</a>
+            {% if role == 'admin' %}
+            <a href="/admin_dashboard">👑 Admin Panel</a>
+            {% endif %}
+            <a href="/logout">🚪 Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    <span>{% if category == 'success' %}✅{% else %}⚠️{% endif %}</span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+        
+        <div class="welcome-card">
+            <h2>Welcome back, {{ username }}! 💙</h2>
+            <p>Role: {{ role }} {% if role == 'admin' %}<span class="admin-badge">Admin Access</span>{% endif %} | Share your product experiences</p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/add_review" class="action-btn">✍️ Write a Review</a>
+            <a href="/view_reviews" class="action-btn">📋 View All Reviews</a>
+        </div>
+        
+        <div class="reviews-section">
+            <h3>
+                <span>📖</span> Recent Reviews
+                <span style="font-size: 0.8em; color: #6BA3D6;">✨</span>
+            </h3>
+            {% if reviews %}
+                {% for review in reviews[:5] %}
+                <div class="review-card">
+                    <div class="review-product">{{ review.product }}</div>
+                    <div class="review-user">👤 {{ review.user }} • {{ review.date.strftime('%B %d, %Y') }}</div>
+                    <div class="review-rating">{% for i in range(review.rating|int) %}⭐{% endfor %} ({{ review.rating }}/5)</div>
+                    <div class="review-text">{{ review.review[:200] }}{% if review.review|length > 200 %}...{% endif %}</div>
+                    <div class="review-footer">
+                        <span class="helpful-count">👍 {{ review.helpful }} found this helpful</span>
+                        {% if role == 'admin' or review.user == username %}
+                        <a href="/delete_review/{{ review._id }}" class="delete-link" onclick="return confirm('Delete this review?')">🗑️ Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center; color: #6BA3D6; padding: 40px;">
+                    No reviews yet. <a href="/add_review" style="color: #4A90D9;">Write the first review!</a>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Add floating bubbles dynamically
+        setInterval(() => {
+            const bubble = document.createElement('div');
+            bubble.className = 'floating-bubble';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            bubble.style.animationDelay = '0s';
+            bubble.innerHTML = ['💙', '💎', '✨', '⭐', '🌟', '💎', '✨', '💙'][Math.floor(Math.random() * 8)];
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 10000);
+        }, 2000);
+    </script>
+</body>
+</html>

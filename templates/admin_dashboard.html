@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Makeup Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #E8D5F5 0%, #D8F0E8 100%);
+            min-height: 100vh;
+        }
+        /* Floating hearts animation */
+        @keyframes floatLove {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .floating-love {
+            position: fixed;
+            font-size: 25px;
+            pointer-events: none;
+            animation: floatLove 12s linear infinite;
+            z-index: 0;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #6B4B8B 0%, #9B7BB5 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(107, 75, 139, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        .logo { 
+            font-size: 1.5em; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 18px;
+            border-radius: 25px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover { 
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        .container { max-width: 1400px; margin: 30px auto; padding: 0 20px; position: relative; z-index: 1; }
+        
+        /* Stats Cards */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(107, 75, 139, 0.1);
+            transition: transform 0.3s;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #6B4B8B;
+        }
+        .stat-label {
+            color: #9B7BB5;
+            margin-top: 10px;
+            font-size: 1em;
+        }
+        
+        /* Sections */
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(107, 75, 139, 0.1);
+        }
+        .section h3 {
+            color: #6B4B8B;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4em;
+        }
+        
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #E8D5F5;
+        }
+        th {
+            background: #F5EDFF;
+            color: #6B4B8B;
+            font-weight: 600;
+        }
+        .role-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            display: inline-block;
+        }
+        .role-admin {
+            background: #FFE0B2;
+            color: #E65100;
+        }
+        .role-user {
+            background: #D8F0E8;
+            color: #4A8B7A;
+        }
+        
+        /* Buttons */
+        .btn-danger {
+            background: #FFE4E4;
+            color: #D46B6B;
+            padding: 6px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85em;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-danger:hover {
+            background: #FFD0D0;
+            transform: scale(1.02);
+        }
+        
+        /* Review Cards */
+        .review-card {
+            border-bottom: 1px solid #E8D5F5;
+            padding: 15px;
+            transition: 0.3s;
+            border-radius: 15px;
+        }
+        .review-card:hover {
+            background: #F5EDFF;
+        }
+        .review-product {
+            font-weight: bold;
+            color: #6B4B8B;
+            font-size: 1.1em;
+        }
+        .review-text {
+            color: #5D5D5D;
+            margin: 8px 0;
+        }
+        
+        .flash {
+            padding: 12px 20px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .flash.success {
+            background: #D8F0E8;
+            color: #4A8B7A;
+            border-left: 4px solid #4A8B7A;
+        }
+        .flash.error {
+            background: #FFE4E4;
+            color: #D46B6B;
+            border-left: 4px solid #D46B6B;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 15px; text-align: center; }
+            .nav-links a { margin: 0 10px; }
+            table { font-size: 12px; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="floating-love" style="left: 5%; animation-duration: 11s;">💜</div>
+    <div class="floating-love" style="left: 20%; animation-duration: 14s; animation-delay: 2s;">💚</div>
+    <div class="floating-love" style="left: 35%; animation-duration: 9s; animation-delay: 4s;">💖</div>
+    <div class="floating-love" style="left: 50%; animation-duration: 12s; animation-delay: 1s;">💜</div>
+    <div class="floating-love" style="left: 65%; animation-duration: 10s; animation-delay: 3s;">💚</div>
+    <div class="floating-love" style="left: 80%; animation-duration: 13s; animation-delay: 5s;">💖</div>
+    <div class="floating-love" style="left: 95%; animation-duration: 8s; animation-delay: 2.5s;">💜</div>
+
+    <div class="navbar">
+        <div class="logo">
+            <span>👑💜</span> Admin Panel
+        </div>
+        <div class="nav-links">
+            <a href="/dashboard">🏠 User Dashboard</a>
+            <a href="/view_reviews">📋 All Reviews</a>
+            <a href="/admin_dashboard">👑 Admin</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    <span>{% if category == 'success' %}✅{% else %}⚠️{% endif %}</span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+        
+        <!-- Welcome Card -->
+        <div class="section">
+            <h3>👑 Welcome, Admin {{ username }}! 💜</h3>
+            <p style="color: #9B7BB5;">You have full control over users and reviews.</p>
+        </div>
+        
+        <!-- Statistics -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">{{ users|length }}</div>
+                <div class="stat-label">💜 Total Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ reviews|length }}</div>
+                <div class="stat-label">💚 Total Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ reviews|selectattr('rating', 'equalto', 5)|list|length }}</div>
+                <div class="stat-label">💖 5-Star Reviews</div>
+            </div>
+        </div>
+        
+        <!-- User Management -->
+        <div class="section">
+            <h3>
+                <span>👥</span> User Management
+                <span style="font-size: 0.8em; color: #9B7BB5;">💜</span>
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Mobile</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.get('mobile', 'N/A') }}</td>
+                        <td>
+                            <span class="role-badge role-{{ user.role }}">
+                                {{ user.role }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if user.username != 'admin' %}
+                            <a href="/admin/delete_user/{{ user._id }}" class="btn-danger" onclick="return confirm('Delete user {{ user.username }} and all their reviews?')">
+                                🗑️ Delete User
+                            </a>
+                            {% else %}
+                            <span style="color: #9B7BB5;">🔒 Protected</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- All Reviews Management -->
+        <div class="section">
+            <h3>
+                <span>📋</span> All Reviews (Admin View)
+                <span style="font-size: 0.8em; color: #9B7BB5;">💚</span>
+            </h3>
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-product">
+                        💄 {{ review.product }}
+                        <span style="font-size: 0.8em; color: #9B7BB5;">by {{ review.user }}</span>
+                    </div>
+                    <div class="review-text">{{ review.review[:100] }}{% if review.review|length > 100 %}...{% endif %}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                        <div>
+                            ⭐ {{ review.rating }}/5 | 👍 {{ review.helpful }} helpful
+                        </div>
+                        <a href="/delete_review/{{ review._id }}" class="btn-danger" onclick="return confirm('Delete this review?')">
+                            🗑️ Delete Review
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="text-align: center; color: #9B7BB5; padding: 30px;">No reviews yet 💜</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Add floating hearts dynamically
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'floating-love';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            heart.style.animationDelay = '0s';
+            heart.innerHTML = ['💜', '💚', '💖', '💗', '💕', '💝'][Math.floor(Math.random() * 6)];
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }, 2000);
+    </script>
+</body>
+</html>

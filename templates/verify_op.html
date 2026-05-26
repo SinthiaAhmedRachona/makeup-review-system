@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - Makeup Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #E8D5F5 0%, #D8F0E8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: white;
+            border-radius: 35px;
+            padding: 45px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(155, 123, 181, 0.2);
+        }
+        h2 { color: #6B4B8B; margin-bottom: 10px; }
+        .subtitle { color: #9B7BB5; margin-bottom: 30px; font-size: 0.9em; }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 8px; color: #7B5B9B; font-weight: 600; }
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E8D5F5;
+            border-radius: 25px;
+            font-size: 20px;
+            text-align: center;
+            letter-spacing: 5px;
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #9B7BB5;
+            box-shadow: 0 0 0 3px rgba(155, 123, 181, 0.2);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #9B7BB5 0%, #7B5B9B 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(155, 123, 181, 0.4);
+        }
+        .flash {
+            padding: 12px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .flash.success {
+            background: #D8F0E8;
+            color: #4A8B7A;
+            border-left: 4px solid #4A8B7A;
+        }
+        .flash.error {
+            background: #FFE4E4;
+            color: #D46B6B;
+            border-left: 4px solid #D46B6B;
+        }
+        .info-text {
+            margin-top: 15px;
+            color: #9B7BB5;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💜 Verify OTP</h2>
+        <p class="subtitle">Enter the 6-digit code sent to your mobile</p>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        
+        <form method="POST">
+            <div class="form-group">
+                <label>🔐 OTP Code</label>
+                <input type="text" name="otp" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required>
+            </div>
+            <button type="submit">💚 Verify OTP 💜</button>
+        </form>
+        
+        <div class="info-text">
+            💖 OTP expires in 5 minutes
+        </div>
+    </div>
+</body>
+</html>

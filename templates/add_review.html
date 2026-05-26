@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Review - Makeup Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #E8D5F5 0%, #D9C5E8 50%, #C4B0DD 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        /* Floating blush elements */
+        @keyframes floatBlush {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.5; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .floating-blush {
+            position: fixed;
+            font-size: 25px;
+            pointer-events: none;
+            animation: floatBlush 12s linear infinite;
+            z-index: 0;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #A890C8 0%, #8B6BB5 50%, #7B5B9B 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(139, 107, 181, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 18px;
+            border-radius: 25px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        .form-card {
+            background: rgba(255, 252, 245, 0.97);
+            padding: 45px;
+            border-radius: 35px;
+            box-shadow: 0 20px 45px rgba(107, 75, 139, 0.25);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(168, 144, 200, 0.4);
+            transition: transform 0.3s ease;
+        }
+        .form-card:hover {
+            transform: translateY(-5px);
+        }
+        h2 {
+            color: #7B5B9B;
+            text-align: center;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1.8em;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #8B6BB5;
+            font-weight: 600;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #D9C5E8;
+            border-radius: 25px;
+            font-size: 14px;
+            background: white;
+            transition: all 0.3s;
+            color: #5D4037;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #A890C8;
+            box-shadow: 0 0 0 4px rgba(168, 144, 200, 0.2);
+            transform: scale(1.01);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        input[type="file"] {
+            padding: 12px;
+            background: #FFF8F0;
+            color: #5D4037;
+        }
+        input[type="file"]::-webkit-file-upload-button {
+            background: linear-gradient(135deg, #A890C8 0%, #8B6BB5 100%);
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: 0.3s;
+        }
+        input[type="file"]::-webkit-file-upload-button:hover {
+            transform: scale(1.02);
+            background: linear-gradient(135deg, #8B6BB5 0%, #7B5B9B 100%);
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #A890C8 0%, #8B6BB5 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(139, 107, 181, 0.4);
+            background: linear-gradient(135deg, #8B6BB5 0%, #7B5B9B 100%);
+        }
+        .flash {
+            padding: 12px 20px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .flash.success {
+            background: #E8F5E9;
+            color: #4A8B7A;
+            border-left: 4px solid #4A8B7A;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .rating-select {
+            cursor: pointer;
+        }
+        .cute-decoration {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            font-size: 1.2em;
+            color: #A890C8;
+        }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 15px; text-align: center; }
+            .form-card { padding: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating blush elements -->
+    <div class="floating-blush" style="left: 5%; animation-duration: 11s;">🌸</div>
+    <div class="floating-blush" style="left: 15%; animation-duration: 14s; animation-delay: 2s;">💜</div>
+    <div class="floating-blush" style="left: 30%; animation-duration: 9s; animation-delay: 4s;">🎀</div>
+    <div class="floating-blush" style="left: 50%; animation-duration: 12s; animation-delay: 1s;">✨</div>
+    <div class="floating-blush" style="left: 70%; animation-duration: 10s; animation-delay: 3s;">🌸</div>
+    <div class="floating-blush" style="left: 85%; animation-duration: 13s; animation-delay: 5s;">💜</div>
+    <div class="floating-blush" style="left: 10%; animation-duration: 15s;">🎀</div>
+    <div class="floating-blush" style="left: 40%; animation-duration: 11s; animation-delay: 3s;">✨</div>
+    <div class="floating-blush" style="left: 75%; animation-duration: 14s; animation-delay: 2s;">🌸</div>
+    <div class="floating-blush" style="left: 90%; animation-duration: 10s; animation-delay: 6s;">💜</div>
+
+    <div class="navbar">
+        <div class="logo">
+            <span>🌸</span> Smart Reviews
+        </div>
+        <div class="nav-links">
+            <a href="/dashboard">🏠 Dashboard</a>
+            <a href="/add_review">✍️ Add Review</a>
+            <a href="/view_reviews">📋 All Reviews</a>
+            <a href="/logout">🚪 Logout</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="form-card">
+            <h2>
+                <span>🌸</span> Write a Beauty Review <span>🎨</span>
+            </h2>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        <span>✅</span> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endwith %}
+            
+            <form method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label><span>💄</span> Product Name</label>
+                    <input type="text" name="product" placeholder="e.g., Lipstick, Foundation, Mascara" required>
+                </div>
+                
+                <div class="form-group">
+                    <label><span>⭐</span> Rating</label>
+                    <select name="rating" class="rating-select" required>
+                        <option value="5">★★★★★ - 5 (Excellent - Love it! 💜)</option>
+                        <option value="4">★★★★☆ - 4 (Good - Like it! 👍)</option>
+                        <option value="3">★★★☆☆ - 3 (Average - It's okay)</option>
+                        <option value="2">★★☆☆☆ - 2 (Poor - Disappointed)</option>
+                        <option value="1">★☆☆☆☆ - 1 (Terrible - Hate it!)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label><span>💬</span> Your Review</label>
+                    <textarea name="review" placeholder="Share your honest experience with this product..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label><span>🖼️</span> Product Image (Optional)</label>
+                    <input type="file" name="product_image" accept="image/*">
+                </div>
+                
+                <button type="submit">
+                    <span>💜</span> Publish Review <span>🌸</span>
+                </button>
+            </form>
+            
+            <div class="cute-decoration">
+                <span>🌸</span> <span>💜</span> <span>🎀</span> <span>✨</span> <span>💄</span> <span>🌟</span> <span>💕</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add floating blush elements dynamically
+        setInterval(() => {
+            const blush = document.createElement('div');
+            blush.className = 'floating-blush';
+            blush.style.left = Math.random() * 100 + '%';
+            blush.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            blush.style.animationDelay = '0s';
+            blush.innerHTML = ['🌸', '💜', '🎀', '✨', '💕', '🌟'][Math.floor(Math.random() * 6)];
+            document.body.appendChild(blush);
+            setTimeout(() => blush.remove(), 10000);
+        }, 2000);
+    </script>
+</body>
+</html>

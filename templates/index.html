@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Makeup Product Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #D9C5E8 0%, #C4B0DD 50%, #A890C8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        /* Purple blush background */
+        body::before {
+            content: "🌸💖🎀✨💜🌸";
+            font-size: 180px;
+            position: absolute;
+            opacity: 0.08;
+            bottom: 10px;
+            right: 10px;
+            pointer-events: none;
+            white-space: pre;
+            transform: rotate(-10deg);
+        }
+        body::after {
+            content: "💜🌸💖🎀✨💜";
+            font-size: 150px;
+            position: absolute;
+            opacity: 0.08;
+            top: 10px;
+            left: 10px;
+            pointer-events: none;
+            white-space: pre;
+            transform: rotate(5deg);
+        }
+        /* Floating hearts animation */
+        @keyframes floatHeart {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .floating-heart {
+            position: fixed;
+            font-size: 25px;
+            pointer-events: none;
+            animation: floatHeart 10s linear infinite;
+            z-index: 0;
+        }
+        .container {
+            background: rgba(255, 250, 250, 0.96);
+            border-radius: 35px;
+            padding: 50px;
+            width: 90%;
+            max-width: 550px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(128, 90, 160, 0.3);
+            border: 2px solid rgba(168, 144, 200, 0.4);
+            backdrop-filter: blur(5px);
+            position: relative;
+            z-index: 1;
+        }
+        .logo {
+            font-size: 65px;
+            margin-bottom: 15px;
+        }
+        h1 {
+            color: #7B5B9B;
+            margin-bottom: 12px;
+            font-size: 2em;
+            font-weight: 700;
+        }
+        .subtitle {
+            color: #A890C8;
+            margin-bottom: 35px;
+            font-size: 1em;
+        }
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #A890C8 0%, #8B6BB5 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(139, 107, 181, 0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 107, 181, 0.5);
+        }
+        .btn-secondary {
+            background: #E8D9F5;
+            color: #7B5B9B;
+        }
+        .btn-secondary:hover {
+            background: #D9C5E8;
+            transform: translateY(-3px);
+        }
+        .features {
+            text-align: left;
+            background: rgba(232, 217, 245, 0.5);
+            padding: 25px;
+            border-radius: 25px;
+            margin-top: 20px;
+        }
+        .features h3 {
+            color: #7B5B9B;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            text-align: center;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .feature-item {
+            padding: 8px;
+            color: #8B6BB5;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feature-item:before {
+            content: "🌸";
+            color: #A890C8;
+            font-weight: bold;
+        }
+        @media (max-width: 500px) {
+            .container { padding: 35px; }
+            .btn-group { flex-direction: column; }
+            .features-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating hearts -->
+    <div class="floating-heart" style="left: 10%; animation-duration: 12s;">💜</div>
+    <div class="floating-heart" style="left: 25%; animation-duration: 15s; animation-delay: 2s;">🌸</div>
+    <div class="floating-heart" style="left: 40%; animation-duration: 10s; animation-delay: 4s;">💖</div>
+    <div class="floating-heart" style="left: 55%; animation-duration: 14s; animation-delay: 1s;">🎀</div>
+    <div class="floating-heart" style="left: 70%; animation-duration: 11s; animation-delay: 3s;">💜</div>
+    <div class="floating-heart" style="left: 85%; animation-duration: 13s; animation-delay: 5s;">🌸</div>
+    <div class="floating-heart" style="left: 15%; animation-duration: 9s; animation-delay: 6s;">💖</div>
+    <div class="floating-heart" style="right: 20%; animation-duration: 16s; animation-delay: 2.5s;">🎀</div>
+
+    <div class="container">
+        <div class="logo">🌸💜🎀</div>
+        <h1>Makeup Product Review Site </h1>
+        <p class="subtitle">Share your honest beauty product reviews 💜</p>
+        
+        <div class="btn-group">
+            <a href="/login" class="btn btn-primary">💜 Login</a>
+            <a href="/register" class="btn btn-secondary">🌸 Register</a>
+        </div>
+        
+        <div class="features">
+            <h3>✨ Features ✨</h3>
+            <div class="features-grid">
+                <div class="feature-item">Add Makeup Reviews</div>
+                <div class="feature-item">Rate with Stars ⭐</div>
+                <div class="feature-item">View All Reviews</div>
+                <div class="feature-item">Delete Your Reviews</div>
+                <div class="feature-item">Admin Can Manage All</div>
+                <div class="feature-item">Mark Reviews Helpful 💜</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add more floating hearts dynamically
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            heart.style.animationDelay = '0s';
+            heart.innerHTML = ['💜', '🌸', '💖', '🎀', '✨', '💕'][Math.floor(Math.random() * 6)];
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 10000);
+        }, 2000);
+    </script>
+</body>
+</html>

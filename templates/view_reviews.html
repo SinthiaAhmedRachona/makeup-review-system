@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Reviews - Smart Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #E8D5F5 0%, #D8F0E8 50%, #C5E6D9 100%);
+            min-height: 100vh;
+        }
+        /* Floating hearts animation */
+        @keyframes floatLove {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.7; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .floating-love {
+            position: fixed;
+            font-size: 25px;
+            pointer-events: none;
+            animation: floatLove 12s linear infinite;
+            z-index: 0;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #9B7BB5 0%, #7B5B9B 50%, #6B4B8B 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(155, 123, 181, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        .logo { 
+            font-size: 1.5em; 
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 18px;
+            border-radius: 25px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-links a:hover { 
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; position: relative; z-index: 1; }
+        .header {
+            background: linear-gradient(135deg, #FFFFFF, #F5EDFF);
+            padding: 25px;
+            border-radius: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(155, 123, 181, 0.12);
+            border-left: 5px solid #9B7BB5;
+        }
+        .header h2 { color: #6B4B8B; display: flex; align-items: center; gap: 10px; }
+        .header p { color: #9B7BB5; margin-top: 8px; }
+        .review-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(155, 123, 181, 0.1);
+            transition: all 0.3s;
+            border: 1px solid rgba(155, 123, 181, 0.15);
+        }
+        .review-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 35px rgba(155, 123, 181, 0.2);
+            border-color: rgba(155, 123, 181, 0.3);
+        }
+        .review-product { 
+            font-size: 1.3em; 
+            font-weight: bold; 
+            color: #6B4B8B;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .review-user { color: #9B7BB5; margin: 8px 0; font-size: 0.9em; }
+        .review-rating { color: #FFB300; font-size: 1.2em; margin: 10px 0; }
+        .review-text { color: #4A6A6A; line-height: 1.6; margin: 15px 0; }
+        .review-image { max-width: 200px; margin: 10px 0; border-radius: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #E8D5F5;
+        }
+        .helpful-btn {
+            background: linear-gradient(135deg, #D8F0E8 0%, #C5E6D9 100%);
+            color: #4A8B7A;
+            padding: 6px 18px;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .helpful-btn:hover {
+            background: linear-gradient(135deg, #C5E6D9 0%, #B0DCCC 100%);
+            transform: scale(1.02);
+        }
+        .delete-btn {
+            background: #FFE4E4;
+            color: #D46B6B;
+            padding: 6px 18px;
+            border-radius: 25px;
+            text-decoration: none;
+            margin-left: 10px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .delete-btn:hover {
+            background: #FFD0D0;
+            transform: scale(1.02);
+        }
+        .flash { 
+            padding: 12px 20px; 
+            border-radius: 25px; 
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .flash.success { background: #D8F0E8; color: #4A8B7A; border-left: 4px solid #4A8B7A; }
+        .flash.error { background: #FFE4E4; color: #D46B6B; border-left: 4px solid #D46B6B; }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .action-icon {
+            animation: pulse 2s ease-in-out infinite;
+            display: inline-block;
+        }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 15px; text-align: center; }
+            .review-footer { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating love icons -->
+    <div class="floating-love" style="left: 5%; animation-duration: 11s;">💜</div>
+    <div class="floating-love" style="left: 15%; animation-duration: 14s; animation-delay: 2s;">💚</div>
+    <div class="floating-love" style="left: 25%; animation-duration: 9s; animation-delay: 4s;">💖</div>
+    <div class="floating-love" style="left: 40%; animation-duration: 12s; animation-delay: 1s;">💜</div>
+    <div class="floating-love" style="left: 55%; animation-duration: 10s; animation-delay: 3s;">💚</div>
+    <div class="floating-love" style="left: 70%; animation-duration: 13s; animation-delay: 5s;">💖</div>
+    <div class="floating-love" style="left: 85%; animation-duration: 8s; animation-delay: 2.5s;">💜</div>
+    <div class="floating-love" style="right: 10%; animation-duration: 15s; animation-delay: 4s;">💚</div>
+
+    <div class="navbar">
+        <div class="logo">
+            <span>💜</span> Smart Reviews
+        </div>
+        <div class="nav-links">
+            <a href="/dashboard">🏠 Dashboard</a>
+            <a href="/add_review">✍️ Add Review</a>
+            <a href="/view_reviews">📋 All Reviews</a>
+            {% if role == 'admin' %}
+            <a href="/admin_dashboard">👑 Admin Panel</a>
+            {% endif %}
+            <a href="/logout">🚪 Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    <span>💜</span> {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+        
+        <div class="header">
+            <h2>
+                <span class="action-icon">💖</span> All Reviews
+                <span style="font-size: 0.8em;">💚💜</span>
+            </h2>
+            <p>Total: {{ reviews|length }} lovely review(s) 💖</p>
+        </div>
+        
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-product">
+                    <span>💜</span> {{ review.product }}
+                </div>
+                <div class="review-user">💖 {{ review.user }} • 📅 {{ review.date.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                <div class="review-rating">{% for i in range(review.rating|int) %}⭐{% endfor %} ({{ review.rating }}/5)</div>
+                <div class="review-text">{{ review.review }}</div>
+                {% if review.file_url %}
+                <img src="{{ review.file_url }}" class="review-image" alt="Product image">
+                {% endif %}
+                <div class="review-footer">
+                    <div>💚 {{ review.helpful }} people found this helpful</div>
+                    <div>
+                        <a href="/helpful/{{ review._id }}" class="helpful-btn">💖 Mark Helpful</a>
+                        {% if role == 'admin' or review.user == username %}
+                        <a href="/delete_review/{{ review._id }}" class="delete-btn" onclick="return confirm('Delete this review?')">💜 Delete</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="background: white; text-align: center; padding: 50px; border-radius: 25px;">
+                <p style="font-size: 1.2em; color: #9B7BB5;">💜 No reviews yet 💜</p>
+                <p style="margin-top: 10px;"><a href="/add_review" style="color: #7B5B9B;">Write the first review! 💖</a></p>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Add floating love icons dynamically
+        setInterval(() => {
+            const love = document.createElement('div');
+            love.className = 'floating-love';
+            love.style.left = Math.random() * 100 + '%';
+            love.style.animationDuration = (Math.random() * 8 + 8) + 's';
+            love.style.animationDelay = '0s';
+            love.innerHTML = ['💜', '💚', '💖', '💗', '💕', '💝'][Math.floor(Math.random() * 6)];
+            document.body.appendChild(love);
+            setTimeout(() => love.remove(), 10000);
+        }, 2000);
+    </script>
+</body>
+</html>

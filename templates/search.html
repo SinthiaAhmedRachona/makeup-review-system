@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Reviews - Smart Review System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #EFEBE9; }
+        .navbar {
+            background: linear-gradient(135deg, #3E2723 0%, #4E342E 100%);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .search-card, .results-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+        }
+        .search-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .search-form input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #D7CCC8;
+            border-radius: 15px;
+        }
+        .search-form select {
+            padding: 12px;
+            border: 2px solid #D7CCC8;
+            border-radius: 15px;
+        }
+        .search-form button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #6D4C41 0%, #5D4037 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        .result-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px;
+        }
+        .result-product { font-size: 1.1em; font-weight: bold; color: #3E2723; }
+        .result-rating { color: #FFB300; margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">📝 Smart Reviews</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/add_review">Add Review</a>
+            <a href="/view_reviews">All Reviews</a>
+            <a href="/search">Search</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="search-card">
+            <h2>🔍 Search Reviews</h2>
+            <form method="GET" action="/search" class="search-form">
+                <input type="text" name="q" placeholder="Search by product or user..." value="{{ query }}">
+                <select name="by">
+                    <option value="product" {% if search_by == 'product' %}selected{% endif %}>Product</option>
+                    <option value="user" {% if search_by == 'user' %}selected{% endif %}>User</option>
+                </select>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        
+        {% if query %}
+        <div class="results-card">
+            <h3>Found {{ reviews|length }} result(s) for "{{ query }}"</h3>
+            {% for review in reviews %}
+            <div class="result-item">
+                <div class="result-product">{{ review.product }}</div>
+                <div>By: {{ review.user }} | {{ review.date.strftime('%Y-%m-%d') }}</div>
+                <div class="result-rating">{% for i in range(review.rating) %}⭐{% endfor %}</div>
+                <div>{{ review.review[:150] }}...</div>
+            </div>
+            {% else %}
+            <p>No reviews found.</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
